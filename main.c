@@ -73,3 +73,25 @@ int execute(char **args, char **front)
 		free (command);
 	return (ret);
 }
+
+/**
+* main - simple UNIX command interpreter
+* @argc: number of arguments
+* @argv: array of pointers to the arguments
+* Return: Value of last command
+*/
+int main(int argc, char **argv[])
+{
+	int ret = 0, retn;
+	int *exe_ret = &retn;
+	char *prompt = "$ ", *newline = "\n";
+
+	name = argv[0];
+	hist = 1;
+	aliases = NULL;
+	signal(SIGINT, sig_handler);
+
+	*exe_ret = 0;
+	environ = copyenv();
+}
+
