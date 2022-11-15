@@ -5,9 +5,9 @@
  *
  * Return: 0
  */
-char *lsh_read_line();
-char **lsh_split_line(char *line);
-void lsh_exec(char **args);
+char *_getline();
+char **tokenize(char *line);
+void _execute(char **args);
 int main(void)
 {
 	char *line;
@@ -16,22 +16,22 @@ int main(void)
 	while (1)
 	{
 		printf("$ ");
-		line = lsh_read_line();
-		tokens = lsh_split_line(line);
+		line = _getline();
+		tokens = tokenize(line);
 		if (tokens[0] != NULL)
 		{
-			lsh_exec(tokens);
+			_execute(tokens);
 		}
 		free(tokens);
 		free(line);
 	}
 }
 /**
- * lsh_read_line - Parses user input
+ * _getline - Parses user input
  *
  * Return: The string stored
  */
-char *lsh_read_line()
+char *_getline()
 {
 	char *buffer = NULL;
 	size_t n = 0;
@@ -52,12 +52,12 @@ char *lsh_read_line()
 	return (buffer);
 }
 /**
- * lsh_split_line - splits strings into arguments and commands
+ * tokenize - splits strings into arguments and commands
  * @line: the string to be split
  *
  * Return: the tokenized string
  */
-char **lsh_split_line(char *line)
+char **tokenize(char *line)
 {
 	int length = 0;
 	int capacity = 16;
@@ -76,12 +76,12 @@ char **lsh_split_line(char *line)
 	return (tokens);
 }
 /**
- * lsh_exec - executes the command and arguments
+ * _execute - executes the command and arguments
  * @args: the arguments to be passed
  *
  * Return: 0
  */
-void lsh_exec(char **args)
+void _execute(char **args)
 {
 	pid_t childpid;
 
