@@ -17,7 +17,7 @@ void sig_handler(int sig)
 }
 
 /**
-*execute - excecute a command in a child process 
+* execute - excecute a command in a child process
 * @args: arguments array
 * @front: double pointer to the beginning of args
 * Return: erro? corresponding error code; otherwise,
@@ -70,7 +70,7 @@ int execute(char **args, char **front)
 		}
 	}
 	if (flag)
-		free (command);
+		free(command);
 	return (ret);
 }
 
@@ -92,6 +92,44 @@ int main(int argc, char **argv[])
 	signal(SIGINT, sig_handler);
 
 	*exe_ret = 0;
-	environ = copyenv();
-}
+	environ = _copyenv();
 
+	if (!environ)
+		exit(-100);
+	if (argc != 1)
+	{
+		ret = proc_file_commands(argv[1], exe_ret);
+		free_env();
+		free_alias_list(aliases);
+
+		return (*exe_ret);
+	}
+
+	if (!isatty(STDIN_FILENO))
+	{
+		while (ret != END_OF_FILE && ret != EXIT)
+			ret = handle_args(exe_ret);
+		free_env();
+		free_alias_list(aliases);
+
+		return (*exe_ret);
+	}
+
+	while (1)
+	{
+		write(STD_FILENO, prompt, 2);
+		ret = handle_args(exe_ret);
+		if (ret == ENF_OF_FILE || ret == EXIT)
+		{
+			if (ret == END_OF_FILE)
+				write(STDOUT_FILENO, newline, 1);
+			free_env();
+			free_alias_list(aliases);
+			exit(*exe_ret);
+		}
+	}
+	free_env();
+	free_alis_list(aliases);
+
+	return (*exe_ret);
+}
