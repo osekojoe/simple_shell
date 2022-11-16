@@ -1,3 +1,7 @@
+/**
+ * File: Help builtins
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 void help_all(void);

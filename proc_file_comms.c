@@ -1,3 +1,7 @@
+/**
+ * File: proc_file_comms.c
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 int cant_open(char *file_path);

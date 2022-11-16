@@ -1,3 +1,7 @@
+/**
+ * File: split.c
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 int token_len(char *str, char *delim);

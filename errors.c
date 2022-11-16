@@ -1,3 +1,7 @@
+/**
+ * File: errors.c
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 int num_len(int num);

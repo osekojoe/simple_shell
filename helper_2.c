@@ -1,3 +1,7 @@
+/**
+ * File: helper_2.c
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 void handle_line(char **line, ssize_t read);

@@ -1,3 +1,7 @@
+/**
+ * File: input_helper.c 
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 char *get_args(char *line, int *exe_ret);

@@ -1,3 +1,7 @@
+/**
+ * File: helper_1.c
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 void free_args(char **args, char **front);

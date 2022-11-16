@@ -1,3 +1,7 @@
+/**
+ * File: length of string
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 int _strlen(const char *s);

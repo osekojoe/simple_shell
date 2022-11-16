@@ -1,3 +1,7 @@
+/**
+ * File: Error message for env
+ * Auth: Joe Kaunda and Dickson Nduati
+ */
 #include "shell.h"
 
 char *error_env(char **args);
