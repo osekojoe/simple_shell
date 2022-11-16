@@ -56,7 +56,7 @@ char *_strcat(char *dest, const char *src)
 	srcTemp = src;
 
 	while (*destTemp != '\0')
-		*destTemp++;
+		destTemp++;
 
 	while (*srcTemp != '\0')
 		*destTemp++ = *srcTemp++;
