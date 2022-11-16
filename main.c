@@ -1,107 +1,135 @@
 #include "shell.h"
-/**
- * main - creates a simple shell
- *
- *
- * Return: 0
- */
-char *_getline();
-char **tokenize(char *line);
-void _execute(char **args);
-int main(void)
-{
-	char *line;
-	char **tokens;
 
-	while (1)
-	{
-		printf("$ ");
-		line = _getline();
-		tokens = tokenize(line);
-		if (tokens[0] != NULL)
-		{
-			_execute(tokens);
-		}
-		free(tokens);
-		free(line);
-	}
+void sig_handler(int sig);
+int execute(char **args, char **front);
+
+/**
+* sig_handler - creates a prompt after a signal
+* @sig: signal
+*/
+void sig_handler(int sig)
+{
+	char *new_prompt = "\n$ ";
+
+	(void)sig;
+	signal(SIGINT, sig_handler);
+	write(STDIN_FILENO, new_prompt, 3);
 }
-/**
- * _getline - Parses user input
- *
- * Return: The string stored
- */
-char *_getline()
-{
-	char *buffer = NULL;
-	size_t n = 0;
 
-	if (getline(&buffer, &n, stdin) == -1)
+/**
+* execute - excecute a command in a child process
+* @args: arguments array
+* @front: double pointer to the beginning of args
+* Return: erro? corresponding error code; otherwise,
+* exit value of the last command
+*/
+int execute(char **args, char **front)
+{
+	pid_t child_pid;
+	int status, flag = 0, ret = 0;
+	char *command = args[0];
+
+	if (command[0] != '/' && command[0] != '.')
 	{
-		if (feof(stdin))
-		{
-			printf("\n");
-			exit(EXIT_SUCCESS);
-		}
+		flag = 1;
+		command = get_location(command);
+	}
+
+	if (!command || (access(command, F_OK) == -1))
+	{
+		if (errno == EACCES)
+			ret = (create_error(args, 126));
 		else
-		{
-			perror("readline");
-			exit(EXIT_FAILURE);
-		}
-	}
-	return (buffer);
-}
-/**
- * tokenize - splits strings into arguments and commands
- * @line: the string to be split
- *
- * Return: the tokenized string
- */
-char **tokenize(char *line)
-{
-	int length = 0;
-	int capacity = 16;
-	char **tokens = malloc(sizeof(char *) * capacity);
-	char *delimiters = "\t\r\n\a";
-	char *token = strtok(line, delimiters);
-
-	while (token)
-	{
-		tokens[length] = token;
-		token = strtok(NULL, delimiters);
-		length++;
-	}
-
-	tokens[length] = NULL;
-	return (tokens);
-}
-/**
- * _execute - executes the command and arguments
- * @args: the arguments to be passed
- *
- * Return: 0
- */
-void _execute(char **args)
-{
-	pid_t childpid;
-
-	childpid = fork();
-	if (childpid == 0)
-	{
-		execve(args[0], args, NULL);
-		perror("./shell");
-		exit(1);
-	}
-	else if (childpid > 0)
-	{
-		int status;
-
-		do {
-			waitpid(childpid, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+			ret = (create_error(args, 127));
 	}
 	else
 	{
-		perror("lsh");
+		child_pid = fork();
+
+		if (child_pid == -1)
+		{
+			if (flag)
+				free(command);
+			perror("Child error : ");
+			return (1);
+		}
+		if (child_pid == 0)
+		{
+			execve(command, args, environ);
+			if (errno == EACCES)
+				ret = (create_error(args, 126));
+			free_env();
+			free_args(args, front);
+			free_alias_list(aliases);
+			_exit(ret);
+		}
+		else
+		{
+			wait(&status);
+			ret = WEXITSTATUS(status);
+		}
 	}
+	if (flag)
+		free(command);
+	return (ret);
+}
+
+/**
+* main - simple UNIX command interpreter
+* @argc: number of arguments
+* @argv: array of pointers to the arguments
+* Return: Value of last command
+*/
+int main(int argc, char **argv[])
+{
+	int ret = 0, retn;
+	int *exe_ret = &retn;
+	char *prompt = "$ ", *newline = "\n";
+
+	name = argv[0];
+	hist = 1;
+	aliases = NULL;
+	signal(SIGINT, sig_handler);
+
+	*exe_ret = 0;
+	environ = _copyenv();
+
+	if (!environ)
+		exit(-100);
+	if (argc != 1)
+	{
+		ret = proc_file_commands(argv[1], exe_ret);
+		free_env();
+		free_alias_list(aliases);
+
+		return (*exe_ret);
+	}
+
+	if (!isatty(STDIN_FILENO))
+	{
+		while (ret != END_OF_FILE && ret != EXIT)
+			ret = handle_args(exe_ret);
+		free_env();
+		free_alias_list(aliases);
+
+		return (*exe_ret);
+	}
+
+	while (1)
+	{
+		write(STD_FILENO, prompt, 2);
+		ret = handle_args(exe_ret);
+		if (ret == ENF_OF_FILE || ret == EXIT)
+		{
+			if (ret == END_OF_FILE)
+				write(STDOUT_FILENO, newline, 1);
+			free_env();
+			free_alias_list(aliases);
+			exit(*exe_ret);
+		}
+	}
+	free_env();
+	free_alis_list(aliases);
+
+	return (*exe_ret);
 }
