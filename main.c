@@ -4,9 +4,9 @@ void sig_handler(int sig);
 int execute(char **args, char **front);
 
 /**
-* sig_handler - creates a prompt after a signal
-* @sig: signal
-*/
+ * sig_handler - Prints a new prompt upon a signal.
+ * @sig: The signal.
+ */
 void sig_handler(int sig)
 {
 	char *new_prompt = "\n$ ";
@@ -17,12 +17,13 @@ void sig_handler(int sig)
 }
 
 /**
-* execute - excecute a command in a child process
-* @args: arguments array
-* @front: double pointer to the beginning of args
-* Return: erro? corresponding error code; otherwise,
-* exit value of the last command
-*/
+ * execute - Executes a command in a child process.
+ * @args: An array of arguments.
+ * @front: A double pointer to the beginning of args.
+ *
+ * Return: If an error occurs - a corresponding error code.
+ *         O/w - The exit value of the last executed command.
+ */
 int execute(char **args, char **front)
 {
 	pid_t child_pid;
@@ -45,12 +46,11 @@ int execute(char **args, char **front)
 	else
 	{
 		child_pid = fork();
-
 		if (child_pid == -1)
 		{
 			if (flag)
 				free(command);
-			perror("Child error : ");
+			perror("Error child:");
 			return (1);
 		}
 		if (child_pid == 0)
@@ -75,16 +75,17 @@ int execute(char **args, char **front)
 }
 
 /**
-* main - simple UNIX command interpreter
-* @argc: number of arguments
-* @argv: array of pointers to the arguments
-* Return: Value of last command
-*/
+ * main - Runs a simple UNIX command interpreter.
+ * @argc: The number of arguments supplied to the program.
+ * @argv: An array of pointers to the arguments.
+ *
+ * Return: The return value of the last executed command.
+ */
 int main(int argc, char *argv[])
 {
 	int ret = 0, retn;
 	int *exe_ret = &retn;
-	char *prompt = "$ ", *newline = "\n";
+	char *prompt = "$ ", *new_line = "\n";
 
 	name = argv[0];
 	hist = 1;
@@ -93,15 +94,14 @@ int main(int argc, char *argv[])
 
 	*exe_ret = 0;
 	environ = _copyenv();
-
 	if (!environ)
 		exit(-100);
+
 	if (argc != 1)
 	{
 		ret = proc_file_commands(argv[1], exe_ret);
 		free_env();
 		free_alias_list(aliases);
-
 		return (*exe_ret);
 	}
 
@@ -111,7 +111,6 @@ int main(int argc, char *argv[])
 			ret = handle_args(exe_ret);
 		free_env();
 		free_alias_list(aliases);
-
 		return (*exe_ret);
 	}
 
@@ -122,14 +121,14 @@ int main(int argc, char *argv[])
 		if (ret == END_OF_FILE || ret == EXIT)
 		{
 			if (ret == END_OF_FILE)
-				write(STDOUT_FILENO, newline, 1);
+				write(STDOUT_FILENO, new_line, 1);
 			free_env();
 			free_alias_list(aliases);
 			exit(*exe_ret);
 		}
 	}
+
 	free_env();
 	free_alias_list(aliases);
-
 	return (*exe_ret);
 }
