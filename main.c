@@ -80,7 +80,7 @@ int execute(char **args, char **front)
 * @argv: array of pointers to the arguments
 * Return: Value of last command
 */
-int main(int argc, char **argv[])
+int main(int argc, char *argv[])
 {
 	int ret = 0, retn;
 	int *exe_ret = &retn;
@@ -117,9 +117,9 @@ int main(int argc, char **argv[])
 
 	while (1)
 	{
-		write(STD_FILENO, prompt, 2);
+		write(STDOUT_FILENO, prompt, 2);
 		ret = handle_args(exe_ret);
-		if (ret == ENF_OF_FILE || ret == EXIT)
+		if (ret == END_OF_FILE || ret == EXIT)
 		{
 			if (ret == END_OF_FILE)
 				write(STDOUT_FILENO, newline, 1);
@@ -129,7 +129,7 @@ int main(int argc, char **argv[])
 		}
 	}
 	free_env();
-	free_alis_list(aliases);
+	free_alias_list(aliases);
 
 	return (*exe_ret);
 }
