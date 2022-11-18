@@ -1,7 +1,3 @@
-/**
- * File: Error msg for permission denials
- * Auth: Joe Kaunda and Dickson Nduati
- */
 #include "shell.h"
 
 char *error_126(char **args);
