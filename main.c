@@ -1,7 +1,3 @@
-/**
- * File: main.c
- * Auth: Joe Kaunda and Dickson Nduati
- */
 #include "shell.h"
 
 void sig_handler(int sig);
