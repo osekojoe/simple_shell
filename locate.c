@@ -1,7 +1,3 @@
-/**
- * File: locate.c
- * Auth: Joe Kaunda and Dickson Nduati
- */
 #include "shell.h"
 
 char *fill_path_dir(char *path);
