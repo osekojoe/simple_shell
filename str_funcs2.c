@@ -2,6 +2,7 @@
  * File: str_funcs2.c
  * Auth: Joe Kaunda and Dickson Nduati
  */
+
 #include "shell.h"
 
 char *_strchr(char *s, char c);
