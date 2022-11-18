@@ -1,7 +1,3 @@
-/**
- * File: helper_1.c
- * Auth: Joe Kaunda and Dickson Nduati
- */
 #include "shell.h"
 
 void free_args(char **args, char **front);
@@ -35,7 +31,7 @@ void free_args(char **args, char **front)
  */
 char *get_pid(void)
 {
-	size_t i  = 0;
+	size_t i = 0;
 	char *buffer;
 	ssize_t file;
 
@@ -57,10 +53,8 @@ char *get_pid(void)
 	buffer[i] = '\0';
 
 	close(file);
-
 	return (buffer);
 }
-
 
 /**
  * get_env_value - Gets the value corresponding to an environmental variable.
