@@ -1,7 +1,3 @@
-/**
- * File: Environment variables
- * Auth: Joe Kaunda and Dickson Nduati
- */
 #include "shell.h"
 
 char **_copyenv(void);
