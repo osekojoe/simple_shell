@@ -1,7 +1,3 @@
-/**
- * File: Alias builtins
- * Auth: Joe Kaunda and Dickson Nduati
- */
 #include "shell.h"
 
 int shellby_alias(char **args, char __attribute__((__unused__)) **front);

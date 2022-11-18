@@ -1,7 +1,3 @@
-/**
- * File - builtins
- * Auth: Joe Kaunda and Dickson Nduati
- */
 #include "shell.h"
 int (*get_builtin(char *command))(char **args, char **front);
 int shellby_exit(char **args, char **front);
@@ -20,8 +16,9 @@ int (*get_builtin(char *command))(char **args, char **front)
 	builtin_t funcs[] = {
 		{ "exit", shellby_exit },
 		{ "env", shellby_env },
-		{ "setenv", shellby_setenv},
-		{ "cd", shellby_cd},
+		{ "setenv", shellby_setenv },
+		{ "unsetenv", shellby_unsetenv },
+		{ "cd", shellby_cd },
 		{ "alias", shellby_alias },
 		{ "help", shellby_help },
 		{ NULL, NULL }
